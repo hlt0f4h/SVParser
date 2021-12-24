@@ -31,7 +31,7 @@ namespace Test {
                     PrintSyntaxTree(prc, 0);
                 } else {
                     Console.WriteLine("Usage:");
-                    Console.WriteLine("  SVTest <inputfile>");
+                    Console.WriteLine("  Test <inputfile>");
                 }
                 
             } catch (Exception ex) {
