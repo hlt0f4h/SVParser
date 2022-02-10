@@ -2,15 +2,19 @@
  * IEEE 1800-2017 SystemVerilog
  * Lexer Rule
  *
- * [#00] 2018-12-19
+ * [#01] 2022-01-22
  *
  * https://github.com/hlt0f4h/SVParser
  */
 
 lexer grammar SVLexer;
 
-// String
-String_literal
+channels {
+  COMMENTS_CH
+}
+
+// String literal
+L_String
   :  '"' SCharSequence? '"'
   ;
 
@@ -50,78 +54,105 @@ fragment UniversalCharacterName
   :  '\\u' Hex_digit Hex_digit Hex_digit Hex_digit
   |  '\\U' Hex_digit Hex_digit Hex_digit Hex_digit Hex_digit Hex_digit Hex_digit Hex_digit
   ;
-
-// Compiler Directive
+  
+// Macro Keywords
 Compiler_directive
   : '`' .*? '\r'? '\n' -> channel (HIDDEN)
   ;
-
-// Keyword
-K_DL_root            : '$root'              ;
-K_DL_unit            : '$unit'              ;
 /*
-K_DL_error           : '$error'             ;
-K_DL_fatal           : '$fatal'             ;
-K_DL_fullskew        : '$fullskew'          ;
-K_DL_hold            : '$hold'              ;
-K_DL_info            : '$info'              ;
-K_DL_nochange        : '$nochange'          ;
-K_DL_period          : '$period'            ;
-K_DL_recovery        : '$recovery'          ;
-K_DL_recrem          : '$recrem'            ;
-K_DL_removal         : '$removal'           ;
-K_DL_setup           : '$setup'             ;
-K_DL_setuphold       : '$setuphold'         ;
-K_DL_skew            : '$skew'              ;
-K_DL_timeskew        : '$timeskew'          ;
-K_DL_warning         : '$warning'           ;
-K_DL_width           : '$width'             ;
+M___FILE__           : '`__FILE__'            ;
+M___LINE__           : '`__LINE__'            ;
+M_begin_keywords     : '`begin_keywords'      ;
+M_cell_define        : '`cell_define'         ;
+M_default_nettype    : '`default_nettype'     ;
+M_define             : '`define'              ;
+M_else               : '`else'                ;
+M_elsif              : '`elsif'               ;
+M_end_cell_define    : '`end_cell_define'     ;
+M_end_keywords       : '`end_keywords'        ;
+M_endif              : '`endif'               ;
+M_ifdef              : '`ifdef'               ;
+M_ifndef             : '`ifndef'              ;
+M_include            : '`include'             ;
+M_line               : '`line'                ;
+M_nounconnected_drive: '`nounconnected_drive' ;
+M_pragma             : '`pragma'              ;
+M_timescale          : '`timescale'           ;
+M_unconnected_drive  : '`unconnected_drive'   ;
+M_undef              : '`undef'               ;
+M_undefineall        : '`undefineall'         ;
+I_Text_macro
+  :  S_BQ Any_Alpha_Bar ( Any_Alpha_Num_Bar_Dol )*
+  |  S_BQ '\\' ( Any_printable_ASCII_character_except_white_space )*
+  ;
 */
-System_tf_identifier
+
+// System task Keywords
+D_root            : '$root'                ;
+D_unit            : '$unit'                ;
+D_error           : '$error'               ;
+D_fatal           : '$fatal'               ;
+D_fullskew        : '$fullskew'            ;
+D_hold            : '$hold'                ;
+D_info            : '$info'                ;
+D_nochange        : '$nochange'            ;
+D_period          : '$period'              ;
+D_recovery        : '$recovery'            ;
+D_recrem          : '$recrem'              ;
+D_removal         : '$removal'             ;
+D_setup           : '$setup'               ;
+D_setuphold       : '$setuphold'           ;
+D_skew            : '$skew'                ;
+D_timeskew        : '$timeskew'            ;
+D_warning         : '$warning'             ;
+D_width           : '$width'               ;
+I_System_tf
   :  S_DL Any_Alpha_Num_Bar_Dol ( Any_Alpha_Num_Bar_Dol )*
   ;
 
-K_begin              : 'begin'              ;
-K_case               : 'case'               ;
-K_casex              : 'casex'              ;
-K_casez              : 'casez'              ;
-K_checker            : 'checker'            ;
-K_class              : 'class'              ;
-K_clocking           : 'clocking'           ;
-K_config             : 'config'             ;
-K_covergroup         : 'covergroup'         ;
-K_end                : 'end'                ;
-K_endcase            : 'endcase'            ;
-K_endchecker         : 'endchecker'         ;
-K_endclass           : 'endclass'           ;
-K_endclocking        : 'endclocking'        ;
-K_endconfig          : 'endconfig'          ;
-K_endfunction        : 'endfunction'        ;
-K_endgenerate        : 'endgenerate'        ;
-K_endgroup           : 'endgroup'           ;
-K_endinterface       : 'endinterface'       ;
-K_endmodule          : 'endmodule'          ;
-K_endpackage         : 'endpackage'         ;
-K_endprimitive       : 'endprimitive'       ;
-K_endprogram         : 'endprogram'         ;
-K_endproperty        : 'endproperty'        ;
-K_endsequence        : 'endsequence'        ;
-K_endspecify         : 'endspecify'         ;
-K_endtable           : 'endtable'           ;
-K_endtask            : 'endtask'            ;
-K_function           : 'function'           ;
-K_generate           : 'generate'           ;
-K_interface          : 'interface'          ;
-K_module             : 'module'             ;
-K_package            : 'package'            ;
-K_primitive          : 'primitive'          ;
-K_program            : 'program'            ;
-K_property           : 'property'           ;
-K_sequence           : 'sequence'           ;
-K_specify            : 'specify'            ;
-K_table              : 'table'              ;
-K_task               : 'task'               ;
+// Block Keywords
+B_begin              : 'begin'              ;
+B_case               : 'case'               ;
+B_casex              : 'casex'              ;
+B_casez              : 'casez'              ;
+B_checker            : 'checker'            ;
+B_class              : 'class'              ;
+B_clocking           : 'clocking'           ;
+B_config             : 'config'             ;
+B_covergroup         : 'covergroup'         ;
+B_end                : 'end'                ;
+B_endcase            : 'endcase'            ;
+B_endchecker         : 'endchecker'         ;
+B_endclass           : 'endclass'           ;
+B_endclocking        : 'endclocking'        ;
+B_endconfig          : 'endconfig'          ;
+B_endfunction        : 'endfunction'        ;
+B_endgenerate        : 'endgenerate'        ;
+B_endgroup           : 'endgroup'           ;
+B_endinterface       : 'endinterface'       ;
+B_endmodule          : 'endmodule'          ;
+B_endpackage         : 'endpackage'         ;
+B_endprimitive       : 'endprimitive'       ;
+B_endprogram         : 'endprogram'         ;
+B_endproperty        : 'endproperty'        ;
+B_endsequence        : 'endsequence'        ;
+B_endspecify         : 'endspecify'         ;
+B_endtask            : 'endtask'            ;
+B_function           : 'function'           ;
+B_generate           : 'generate'           ;
+B_interface          : 'interface'          ;
+B_macromodule        : 'macromodule'        ;
+B_module             : 'module'             ;
+B_package            : 'package'            ;
+B_primitive          : 'primitive'          ;
+B_program            : 'program'            ;
+B_property           : 'property'           ;
+B_sequence           : 'sequence'           ;
+B_specify            : 'specify'            ;
+B_table              : 'table'              -> mode(UDP);
+B_task               : 'task'               ;
 
+// Statement Keywords
 K_DPI_C              : 'DPI-C'              ;
 K_DPI                : 'DPI'                ;
 K_PATHPULSE_DL       : 'PATHPULSE$'         ;
@@ -188,7 +219,6 @@ K_let                : 'let'                ;
 K_liblist            : 'liblist'            ;
 K_library            : 'library'            ;
 K_local_CO_CO        : 'local::'            ;
-K_macromodule        : 'macromodule'        ;
 K_matches            : 'matches'            ;
 K_modport            : 'modport'            ;
 K_nettype            : 'nettype'            ;
@@ -244,14 +274,14 @@ K_wildcard           : 'wildcard'           ;
 K_with               : 'with'               ;
 K_within             : 'within'             ;
 
-// Type
+// Type Keywords
 T_automatic          : 'automatic'          ;
 T_bit                : 'bit'                ;
 T_byte               : 'byte'               ;
 T_chandle            : 'chandle'            ;
 T_const              : 'const'              ;
 T_context            : 'context'            ;
-T_edge               : 'edge'               ;
+T_edge               : 'edge'               -> pushMode(EDGE);
 T_enum               : 'enum'               ;
 T_final              : 'final'              ;
 T_genvar             : 'genvar'             ;
@@ -316,35 +346,40 @@ T_weak1              : 'weak1'              ;
 T_wire               : 'wire'               ;
 T_wor                : 'wor'                ;
 
-// Keyword
-K_and                : 'and'                ;
-K_buf                : 'buf'                ;
-K_bufif0             : 'bufif0'             ;
-K_bufif1             : 'bufif1'             ;
-K_cmos               : 'cmos'               ;
-K_nand               : 'nand'               ;
-K_nmos               : 'nmos'               ;
-K_nor                : 'nor'                ;
-K_not                : 'not'                ;
-K_notif0             : 'notif0'             ;
-K_notif1             : 'notif1'             ;
-K_or                 : 'or'                 ;
-K_pmos               : 'pmos'               ;
-K_pulldown           : 'pulldown'           ;
-K_pullup             : 'pullup'             ;
-K_rcmos              : 'rcmos'              ;
-K_rnmos              : 'rnmos'              ;
-K_rpmos              : 'rpmos'              ;
-K_rtran              : 'rtran'              ;
-K_rtranif0           : 'rtranif0'           ;
-K_rtranif1           : 'rtranif1'           ;
-K_tran               : 'tran'               ;
-K_tranif0            : 'tranif0'            ;
-K_tranif1            : 'tranif1'            ;
-K_xnor               : 'xnor'               ;
-K_xor                : 'xor'                ;
+// Other keyword
+O_and                : 'and'                ;
+O_buf                : 'buf'                ;
+O_bufif0             : 'bufif0'             ;
+O_bufif1             : 'bufif1'             ;
+O_cmos               : 'cmos'               ;
+O_nand               : 'nand'               ;
+O_nmos               : 'nmos'               ;
+O_nor                : 'nor'                ;
+O_not                : 'not'                ;
+O_notif0             : 'notif0'             ;
+O_notif1             : 'notif1'             ;
+O_or                 : 'or'                 ;
+O_pmos               : 'pmos'               ;
+O_pulldown           : 'pulldown'           ;
+O_pullup             : 'pullup'             ;
+O_rcmos              : 'rcmos'              ;
+O_rnmos              : 'rnmos'              ;
+O_rpmos              : 'rpmos'              ;
+O_rtran              : 'rtran'              ;
+O_rtranif0           : 'rtranif0'           ;
+O_rtranif1           : 'rtranif1'           ;
+O_tran               : 'tran'               ;
+O_tranif0            : 'tranif0'            ;
+O_tranif1            : 'tranif1'            ;
+O_xnor               : 'xnor'               ;
+O_xor                : 'xor'                ;
 
-// Symbol
+N_Unbased_unsized
+  : '\'0' | '\'1' | '\'z_or_x'
+  ;
+
+// Symbols
+S_BQ				 : '`'                  ;
 S_SQ                 : '\''                 ;
 S_MI                 : '-'                  ;
 S_MI_MI              : '--'                 ;
@@ -383,7 +418,7 @@ S_DV                 : '/'                  ;
 S_DV_EQ              : '/='                 ;
 S_CO                 : ':'                  ;
 S_MI_CO              : '-:'                 ;
-S_CO_DV              : ':/' ~'/'            ;
+S_CO_DV              : ':/' ~[/*]           ;
 S_CO_CO              : '::'                 ;
 S_CO_EQ              : ':='                 ;
 S_SC                 : ';'                  ;
@@ -442,36 +477,36 @@ S_RB_RB_RB           : '>>>'                ;
 S_RB_RB_RB_EQ        : '>>>='               ;
 
 // Number
-Decimal_base_number
-  : Decimal_base Unsigned_number
+N_Dec
+  : Decimal_base N_Unsigned
   | Decimal_base X_digit ( S_UB )*
   | Decimal_base Z_digit ( S_UB )*
   ;
 
-Binary_base_number
+N_Bin
   : Binary_base Binary_value
   ;
 
-Octal_base_number
+N_Oct
   : Octal_base Octal_value
   ;
 
-Hex_base_number
+N_Hex
   : Hex_base Hex_value
   ;
 
-Exp_number
-  : Unsigned_number ( S_DT Unsigned_number )? Exp ( Sign )? Unsigned_number
+N_Exp
+  : N_Unsigned ( S_DT N_Unsigned )? Exp ( Sign )? N_Unsigned
   ;
 
-Fixed_point_number
-  : Unsigned_number S_DT Unsigned_number
+N_Fix
+  : N_Unsigned S_DT N_Unsigned
   ;
 
-Unsigned_number
+N_Unsigned
   :  Decimal_digit ( S_UB | Decimal_digit )*
   ;
-
+  
 fragment Sign
   :  S_PL | S_MI
   ;
@@ -543,15 +578,19 @@ fragment X_digit
 fragment Z_digit
   :  'z' | 'Z' | S_QU
   ;
-
-Unbased_unsized_literal
-  :  '\'0' | '\'1' | '\'z_or_x'
+ 
+fragment Z
+  :  'z' | 'Z'
   ;
 
-// Time
-Time_literal
-  :  Unsigned_number Time_unit
-  |  Fixed_point_number Time_unit
+fragment X
+  :  'x' | 'X'
+  ;
+
+// Time literal
+L_Time
+  :  N_Unsigned Time_unit
+  |  N_Fix Time_unit
   ;
 
 fragment Time_unit
@@ -559,12 +598,12 @@ fragment Time_unit
   ;
 
 // Identifier
-Simple_identifier
-  :   Any_Alpha_Bar ( Any_Alpha_Num_Bar_Dol )*
+I_Escaped
+  :  '\\' ( Any_printable_ASCII_character_except_white_space )*
   ;
 
-Escaped_identifier
-  :  '\\' ( Any_printable_ASCII_character_except_white_space )*
+I_Simple
+  :  Any_Alpha_Bar ( Any_Alpha_Num_Bar_Dol )*
   ;
 
 fragment Any_Alpha_Bar
@@ -582,19 +621,90 @@ fragment Any_Alpha_Num_Bar_Dol
 fragment Any_printable_ASCII_character_except_white_space
   : ~[ \r\t\n]
   ;
-/*
-fragment Any_ASCII_Characters
-  :  ('\u0021'..'\u007E')+
-  ;
-*/
-White_space
-  : [ \t\n\r] + -> channel (HIDDEN)
+  
+// White Space
+// Numbers can be aligned with spaces
+WS
+  : [ \t\n\r]+ -> skip
   ;
 
-Block_comment
-  : '/*' .*? '*/' -> channel (HIDDEN)
+// Comments
+C_Block
+  : '/*' .*? '*/' -> channel(COMMENTS_CH)
   ;
 
-One_line_comment
-  : '//' .*? '\r'? '\n' -> channel (HIDDEN)
+C_Line
+  : '//' .*? '\r'? '\n' -> channel(COMMENTS_CH)
   ;
+  
+//------------------------------------------------------------------
+mode UDP;
+
+S_Level
+  :  '0' | '1' | 'X' | 'x' | '?' | 'b' | 'B'
+  ;
+
+S_Edge
+  :  'r' | 'R' | 'f' | 'F' | 'p' | 'P' | 'n' | 'N' | '*'
+  ;
+
+S_CO_EDGE : ':' ;
+S_SC_EDGE : ';' ;
+S_LM_EDGE : '(' ;
+S_RM_EDGE : ')' ;
+S_MI_EDGE : '-' ;
+
+B_endtable
+  : 'endtable' -> mode(DEFAULT_MODE) ;
+  
+WS_UDP
+  : [ \t\n\r]+ -> skip
+  ;
+
+C_Block_UDP
+  : '/*' .*? '*/' -> channel(COMMENTS_CH)
+  ;
+
+C_Line_UDP
+  : '//' .*? '\r'? '\n' -> channel(COMMENTS_CH)
+  ;
+
+//------------------------------------------------------------------
+mode EDGE;
+
+S_ZO_OZ
+  : '01' | '10'
+  ;
+
+S_Z_O
+  :  '0' | '1'
+  ;
+
+S_Z_X
+  :  'z' | 'Z' | 'x' | 'X'
+  ;
+
+S_CM_EDGE
+  : ','
+  ;
+
+S_RK_EDGE
+  : ']' -> popMode
+  ;
+  
+S_ID_EDGE
+  : . -> more, popMode
+  ;
+  
+WS_EDGE
+  : [ \t\n\r]+ -> skip
+  ;
+
+C_Block_EDGE
+  : '/*' .*? '*/' -> channel(COMMENTS_CH)
+  ;
+
+C_Line_EDGE
+  : '//' .*? '\r'? '\n' -> channel(COMMENTS_CH)
+  ;
+  

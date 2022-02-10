@@ -2,12 +2,10 @@
  * IEEE 1800-2017 SystemVerilog
  * Parser Rule
  *
- * [#00] 2018-12-19
+ * [#01] 2022-01-22
  *
  * https://github.com/hlt0f4h/SVParser
  */
-
- // search: fixme
 
 parser grammar SVParser;
 
@@ -24,7 +22,7 @@ source_text
 
 description 
   :  module_declaration
-//|  udp_declaration		// fixme
+  |  udp_declaration
   |  interface_declaration
   |  program_declaration
   |  package_declaration
@@ -42,55 +40,55 @@ module_ansi_header
   ;
 
 module_declaration 
-  :  module_nonansi_header ( timeunits_declaration )? ( module_item )* K_endmodule ( S_CO module_identifier )?
-  |  module_ansi_header ( timeunits_declaration )? ( non_port_module_item )* K_endmodule ( S_CO module_identifier )?
-  |  ( attribute_instance )* module_keyword ( lifetime )? module_identifier S_LM S_DT_AS S_RM S_SC ( timeunits_declaration )? ( module_item )* K_endmodule ( S_CO module_identifier )?
+  :  module_nonansi_header ( timeunits_declaration )? ( module_item )* B_endmodule ( S_CO module_identifier )?
+  |  module_ansi_header ( timeunits_declaration )? ( non_port_module_item )* B_endmodule ( S_CO module_identifier )?
+  |  ( attribute_instance )* module_keyword ( lifetime )? module_identifier S_LM S_DT_AS S_RM S_SC ( timeunits_declaration )? ( module_item )* B_endmodule ( S_CO module_identifier )?
   |  K_extern module_nonansi_header
   |  K_extern module_ansi_header
   ;
 
 module_keyword
-  :  K_module | K_macromodule
+  :  B_module | B_macromodule
   ;
 
 interface_declaration 
-  :  interface_nonansi_header ( timeunits_declaration )? ( interface_item )* K_endinterface ( S_CO interface_identifier )?
-  |  interface_ansi_header ( timeunits_declaration )? ( non_port_interface_item )* K_endinterface ( S_CO interface_identifier )?
-  |  ( attribute_instance )* K_interface interface_identifier S_LM S_DT_AS S_RM S_SC ( timeunits_declaration )? ( interface_item )* K_endinterface ( S_CO interface_identifier )?
+  :  interface_nonansi_header ( timeunits_declaration )? ( interface_item )* B_endinterface ( S_CO interface_identifier )?
+  |  interface_ansi_header ( timeunits_declaration )? ( non_port_interface_item )* B_endinterface ( S_CO interface_identifier )?
+  |  ( attribute_instance )* B_interface interface_identifier S_LM S_DT_AS S_RM S_SC ( timeunits_declaration )? ( interface_item )* B_endinterface ( S_CO interface_identifier )?
   |  K_extern interface_nonansi_header
   |  K_extern interface_ansi_header
   ;
 
 interface_nonansi_header 
-  :  ( attribute_instance )* K_interface ( lifetime )? interface_identifier ( package_import_declaration )* ( parameter_port_list )? list_of_ports S_SC
+  :  ( attribute_instance )* B_interface ( lifetime )? interface_identifier ( package_import_declaration )* ( parameter_port_list )? list_of_ports S_SC
   ;
 
 interface_ansi_header 
-  :  ( attribute_instance )* K_interface ( lifetime )? interface_identifier ( package_import_declaration )* ( parameter_port_list )? ( list_of_port_declarations )? S_SC
+  :  ( attribute_instance )* B_interface ( lifetime )? interface_identifier ( package_import_declaration )* ( parameter_port_list )? ( list_of_port_declarations )? S_SC
   ;
 
 program_declaration 
-  :  program_nonansi_header ( timeunits_declaration )? ( program_item )* K_endprogram ( S_CO program_identifier )? 
-  |  program_ansi_header ( timeunits_declaration )? ( non_port_program_item )* K_endprogram ( S_CO program_identifier )?
-  |  ( attribute_instance )* K_program program_identifier S_LM S_DT_AS S_RM S_SC ( timeunits_declaration )? ( program_item )* K_endprogram ( S_CO program_identifier )?
+  :  program_nonansi_header ( timeunits_declaration )? ( program_item )* B_endprogram ( S_CO program_identifier )? 
+  |  program_ansi_header ( timeunits_declaration )? ( non_port_program_item )* B_endprogram ( S_CO program_identifier )?
+  |  ( attribute_instance )* B_program program_identifier S_LM S_DT_AS S_RM S_SC ( timeunits_declaration )? ( program_item )* B_endprogram ( S_CO program_identifier )?
   |  K_extern program_nonansi_header
   |  K_extern program_ansi_header
   ;
 
 program_nonansi_header 
-  :  ( attribute_instance )* K_program ( lifetime )? program_identifier ( package_import_declaration )* ( parameter_port_list )? list_of_ports S_SC
+  :  ( attribute_instance )* B_program ( lifetime )? program_identifier ( package_import_declaration )* ( parameter_port_list )? list_of_ports S_SC
   ;
 
 program_ansi_header 
-  :  ( attribute_instance )* K_program ( lifetime )? program_identifier ( package_import_declaration )* ( parameter_port_list )? ( list_of_port_declarations )? S_SC
+  :  ( attribute_instance )* B_program ( lifetime )? program_identifier ( package_import_declaration )* ( parameter_port_list )? ( list_of_port_declarations )? S_SC
   ;
 
 checker_declaration 
-  :  K_checker checker_identifier ( S_LM ( checker_port_list )? S_RM )? S_SC ( ( attribute_instance )* checker_or_generate_item )* K_endchecker ( S_CO checker_identifier )?
+  :  B_checker checker_identifier ( S_LM ( checker_port_list )? S_RM )? S_SC ( ( attribute_instance )* checker_or_generate_item )* B_endchecker ( S_CO checker_identifier )?
   ;
 
 class_declaration 
-  :   ( T_virtual )? K_class ( lifetime )? class_identifier ( parameter_port_list )? ( K_extends class_type ( S_LM list_of_arguments S_RM )? )? ( K_implements interface_class_type ( S_CM interface_class_type )* )? S_SC ( class_item )* K_endclass ( S_CO class_identifier )?
+  :   ( T_virtual )? B_class ( lifetime )? class_identifier ( parameter_port_list )? ( K_extends class_type ( S_LM list_of_arguments S_RM )? )? ( K_implements interface_class_type ( S_CM interface_class_type )* )? S_SC ( class_item )* B_endclass ( S_CO class_identifier )?
   ;
 
 interface_class_type
@@ -98,7 +96,7 @@ interface_class_type
   ;
 
 interface_class_declaration 
-  :  K_interface K_class class_identifier ( parameter_port_list )? ( K_extends interface_class_type ( S_CM interface_class_type )* )? S_SC ( interface_class_item )* K_endclass ( S_CO class_identifier )?
+  :  B_interface B_class class_identifier ( parameter_port_list )? ( K_extends interface_class_type ( S_CM interface_class_type )* )? S_SC ( interface_class_item )* B_endclass ( S_CO class_identifier )?
   ;
 
 interface_class_item 
@@ -114,14 +112,14 @@ interface_class_method
   ;
 
 package_declaration 
-  :  ( attribute_instance )* K_package ( lifetime )? package_identifier S_SC ( timeunits_declaration )? ( ( attribute_instance )* package_item )* K_endpackage ( S_CO package_identifier )?
+  :  ( attribute_instance )* B_package ( lifetime )? package_identifier S_SC ( timeunits_declaration )? ( ( attribute_instance )* package_item )* B_endpackage ( S_CO package_identifier )?
   ;
 
 timeunits_declaration 
-  :  K_timeunit Time_literal ( S_DV Time_literal )? S_SC
-  |  K_timeprecision Time_literal S_SC
-  |  K_timeunit Time_literal S_SC K_timeprecision Time_literal S_SC
-  |  K_timeprecision Time_literal S_SC K_timeunit Time_literal S_SC
+  :  K_timeunit L_Time ( S_DV L_Time )? S_SC
+  |  K_timeprecision L_Time S_SC
+  |  K_timeunit L_Time S_SC K_timeprecision L_Time S_SC
+  |  K_timeprecision L_Time S_SC K_timeunit L_Time S_SC
   ;
 
 // A.1.3 Module parameters and ports
@@ -183,7 +181,7 @@ variable_port_header
 
 interface_port_header 
   :  interface_identifier ( S_DT modport_identifier )?
-  |  K_interface ( S_DT modport_identifier )?
+  |  B_interface ( S_DT modport_identifier )?
   ;
 
 ansi_port_declaration 
@@ -193,19 +191,15 @@ ansi_port_declaration
   ;
 
 // A.1.4 Module items
-// fixme
-/*
+
+//[Mod]
 elaboration_system_task 
-  :  K_DL_fatal ( S_LM finish_number ( S_CM list_of_arguments )? S_RM )? S_SC
-  |  K_DL_error ( S_LM ( list_of_arguments )? S_RM )? S_SC
-  |  K_DL_warning ( S_LM ( list_of_arguments )? S_RM )? S_SC
-  |  K_DL_info ( S_LM ( list_of_arguments )? S_RM )? S_SC
+  :  D_fatal ( S_LM N_Unsigned ( S_CM list_of_arguments )? S_RM )? S_SC
+  |  D_error ( S_LM ( list_of_arguments )? S_RM )? S_SC
+  |  D_warning ( S_LM ( list_of_arguments )? S_RM )? S_SC
+  |  D_info ( S_LM ( list_of_arguments )? S_RM )? S_SC
   ;
 
-fragment finish_number
-  :  '0' | '1' | '2'
-  ;
-*/
 module_common_item 
   :  module_or_generate_item_declaration
   |  interface_instantiation
@@ -219,7 +213,7 @@ module_common_item
   |  always_construct
   |  loop_generate_construct
   |  conditional_generate_construct
-//|  elaboration_system_task	// fixme
+  |  elaboration_system_task
   ;
 
 module_item 
@@ -230,7 +224,7 @@ module_item
 module_or_generate_item 
   :  ( attribute_instance )* parameter_override
   |  ( attribute_instance )* gate_instantiation
-//|  ( attribute_instance )* udp_instantiation	// fixme
+  |  ( attribute_instance )* udp_instantiation
   |  ( attribute_instance )* module_instantiation
   |  ( attribute_instance )* module_common_item
   ;
@@ -239,7 +233,7 @@ module_or_generate_item_declaration
   :  package_or_generate_item_declaration
   |  genvar_declaration
   |  clocking_declaration
-  |  K_default K_clocking clocking_identifier S_SC
+  |  K_default B_clocking clocking_identifier S_SC
   |  K_default K_disable K_iff expression_or_dist S_SC
   ;
 
@@ -286,7 +280,7 @@ bind_instantiation
 // A.1.5 Configuration source text
 
 config_declaration 
-  :  K_config config_identifier S_SC ( local_parameter_declaration S_SC )* design_statement ( config_rule_statement )* K_endconfig ( S_CO config_identifier )?
+  :  B_config config_identifier S_SC ( local_parameter_declaration S_SC )* design_statement ( config_rule_statement )* B_endconfig ( S_CO config_identifier )?
   ;
 
 design_statement
@@ -322,9 +316,9 @@ liblist_clause
   ;
 
 use_clause
-  :  K_use ( library_identifier S_DT )? cell_identifier ( S_CO K_config )?
-  |  K_use named_parameter_assignment ( S_CM named_parameter_assignment )* ( S_CO K_config )?
-  |  K_use ( library_identifier S_DT )? cell_identifier named_parameter_assignment ( S_CM named_parameter_assignment )* ( S_CO K_config )?
+  :  K_use ( library_identifier S_DT )? cell_identifier ( S_CO B_config )?
+  |  K_use named_parameter_assignment ( S_CM named_parameter_assignment )* ( S_CO B_config )?
+  |  K_use ( library_identifier S_DT )? cell_identifier named_parameter_assignment ( S_CM named_parameter_assignment )* ( S_CO B_config )?
   ;
 
 // A.1.6 Interface items
@@ -374,7 +368,7 @@ program_generate_item
   :  loop_generate_construct
   |  conditional_generate_construct
   |  generate_region
-//|  elaboration_system_task	// fixme
+  |  elaboration_system_task
   ;
 
 // A.1.8 Checker items
@@ -409,7 +403,7 @@ checker_or_generate_item_declaration
   |  covergroup_declaration
   |  genvar_declaration
   |  clocking_declaration
-  |  K_default K_clocking clocking_identifier S_SC
+  |  K_default B_clocking clocking_identifier S_SC
   |  K_default K_disable K_iff expression_or_dist S_SC
   |  S_SC
   ;
@@ -418,7 +412,7 @@ checker_generate_item
   :  loop_generate_construct
   |  conditional_generate_construct
   |  generate_region
-//|  elaboration_system_task	// fixme
+  |  elaboration_system_task
   ;
 
 // A.1.9 Class items
@@ -449,7 +443,7 @@ class_method
   ;
 
 class_constructor_prototype 
-  :  K_function K_new ( S_LM ( tf_port_list )? S_RM )? S_SC
+  :  B_function K_new ( S_LM ( tf_port_list )? S_RM )? S_SC
   ;
 
 class_constraint 
@@ -484,7 +478,7 @@ method_prototype
   ;
 
 class_constructor_declaration 
-  :  K_function ( class_scope )? K_new ( S_LM ( tf_port_list )? S_RM )? S_SC ( block_item_declaration )* ( K_super S_DT K_new ( S_LM list_of_arguments S_RM )? S_SC )? ( function_statement_or_null )* K_endfunction ( S_CO K_new )?
+  :  B_function ( class_scope )? K_new ( S_LM ( tf_port_list )? S_RM )? S_SC ( block_item_declaration )* ( K_super S_DT K_new ( S_LM list_of_arguments S_RM )? S_SC )? ( function_statement_or_null )* B_endfunction ( S_CO K_new )?
   ;
 
 // A.1.10 Constraints
@@ -584,7 +578,7 @@ package_or_generate_item_declaration
   ;
 
 anonymous_program
-  :  K_program S_SC ( anonymous_program_item )* K_endprogram
+  :  B_program S_SC ( anonymous_program_item )* B_endprogram
   ;
 
 anonymous_program_item 
@@ -675,7 +669,7 @@ net_declaration
 type_declaration 
   :  K_typedef data_type type_identifier ( variable_dimension )* S_SC
   |  K_typedef interface_instance_identifier constant_bit_select S_DT type_identifier type_identifier S_SC
-  |  K_typedef ( T_enum | T_struct | T_union | K_class | K_interface K_class )? type_identifier S_SC
+  |  K_typedef ( T_enum | T_struct | T_union | B_class | B_interface B_class )? type_identifier S_SC
   ;
 
 net_type_declaration 
@@ -694,6 +688,11 @@ casting_type
   :  simple_type | constant_primary | signing | T_string | T_const
   ;
 
+//[mod]
+casting_type_t
+  :  simple_type | signing | T_string | T_const
+  ;
+
 data_type 
   :  integer_vector_type ( signing )? ( packed_dimension )*
   |  integer_atom_type ( signing )?
@@ -702,7 +701,7 @@ data_type
   |  T_enum ( enum_base_type )? S_LN enum_name_declaration ( S_CM enum_name_declaration )* S_RN ( packed_dimension )*
   |  T_string
   |  T_chandle
-  |  T_virtual ( K_interface )? interface_identifier ( parameter_value_assignment )? ( S_DT modport_identifier )?
+  |  T_virtual ( B_interface )? interface_identifier ( parameter_value_assignment )? ( S_DT modport_identifier )?
   |   ( class_scope | package_scope )? type_identifier ( packed_dimension )*
   |  class_type
   |  K_event
@@ -830,10 +829,10 @@ delay2
   ;
 
 delay_value 
-  :  Unsigned_number
+  :  N_Unsigned
   |  real_number
   |  ps_identifier
-  |  Time_literal
+  |  L_Time
   |  K_1step
   ;
 
@@ -986,23 +985,23 @@ function_data_type_or_implicit
   ;
 
 function_declaration
-  :  K_function ( lifetime )? function_body_declaration
+  :  B_function ( lifetime )? function_body_declaration
   ;
 
 function_body_declaration 
-  :  function_data_type_or_implicit ( interface_identifier S_DT | class_scope )? function_identifier S_SC ( tf_item_declaration )* ( function_statement_or_null )* K_endfunction ( S_CO function_identifier )?
-  |  function_data_type_or_implicit ( interface_identifier S_DT | class_scope )? function_identifier S_LM ( tf_port_list )? S_RM S_SC ( block_item_declaration )* ( function_statement_or_null )* K_endfunction ( S_CO function_identifier )?
+  :  function_data_type_or_implicit ( interface_identifier S_DT | class_scope )? function_identifier S_SC ( tf_item_declaration )* ( function_statement_or_null )* B_endfunction ( S_CO function_identifier )?
+  |  function_data_type_or_implicit ( interface_identifier S_DT | class_scope )? function_identifier S_LM ( tf_port_list )? S_RM S_SC ( block_item_declaration )* ( function_statement_or_null )* B_endfunction ( S_CO function_identifier )?
   ;
 
 function_prototype
-  :  K_function data_type_or_void function_identifier ( S_LM ( tf_port_list )? S_RM )?
+  :  B_function data_type_or_void function_identifier ( S_LM ( tf_port_list )? S_RM )?
   ;
 
 dpi_import_export 
   :  K_import dpi_spec_string ( dpi_function_import_property )? ( c_identifier S_EQ )? dpi_function_proto S_SC
   |  K_import dpi_spec_string ( dpi_task_import_property )? ( c_identifier S_EQ )? dpi_task_proto S_SC
-  |  K_export dpi_spec_string ( c_identifier S_EQ )? K_function function_identifier S_SC
-  |  K_export dpi_spec_string ( c_identifier S_EQ )? K_task task_identifier S_SC
+  |  K_export dpi_spec_string ( c_identifier S_EQ )? B_function function_identifier S_SC
+  |  K_export dpi_spec_string ( c_identifier S_EQ )? B_task task_identifier S_SC
   ;
 
 dpi_spec_string
@@ -1028,12 +1027,12 @@ dpi_task_proto
 // A.2.7 Task declarations
 
 task_declaration
-  :  K_task ( lifetime )? task_body_declaration
+  :  B_task ( lifetime )? task_body_declaration
   ;
 
 task_body_declaration 
-  :   ( interface_identifier S_DT | class_scope )? task_identifier S_SC ( tf_item_declaration )* ( statement_or_null )* K_endtask ( S_CO task_identifier )?
-  |   ( interface_identifier S_DT | class_scope )? task_identifier S_LM ( tf_port_list )? S_RM S_SC ( block_item_declaration )* ( statement_or_null )* K_endtask ( S_CO task_identifier )?
+  :   ( interface_identifier S_DT | class_scope )? task_identifier S_SC ( tf_item_declaration )* ( statement_or_null )* B_endtask ( S_CO task_identifier )?
+  |   ( interface_identifier S_DT | class_scope )? task_identifier S_LM ( tf_port_list )? S_RM S_SC ( block_item_declaration )* ( statement_or_null )* B_endtask ( S_CO task_identifier )?
   ;
 
 tf_item_declaration 
@@ -1058,7 +1057,7 @@ tf_port_declaration
   ;
 
 task_prototype
-  :  K_task task_identifier ( S_LM ( tf_port_list )? S_RM )?
+  :  B_task task_identifier ( S_LM ( tf_port_list )? S_RM )?
   ;
 
 // A.2.8 Block item declarations
@@ -1087,7 +1086,7 @@ modport_ports_declaration
   ;
 
 modport_clocking_declaration
-  :  K_clocking clocking_identifier
+  :  B_clocking clocking_identifier
   ;
 
 modport_simple_ports_declaration 
@@ -1128,15 +1127,15 @@ concurrent_assertion_statement
   ;
 
 assert_property_statement
-  :  K_assert K_property S_LM property_spec S_RM action_block
+  :  K_assert B_property S_LM property_spec S_RM action_block
   ;
 
 assume_property_statement
-  :  K_assume K_property S_LM property_spec S_RM action_block
+  :  K_assume B_property S_LM property_spec S_RM action_block
   ;
 
 cover_property_statement
-  :  K_cover K_property S_LM property_spec S_RM statement_or_null
+  :  K_cover B_property S_LM property_spec S_RM statement_or_null
   ;
 
 expect_property_statement 
@@ -1144,11 +1143,11 @@ expect_property_statement
   ;
 
 cover_sequence_statement
-  :  K_cover K_sequence S_LM ( clocking_event )? ( K_disable K_iff S_LM expression_or_dist S_RM )? sequence_expr S_RM statement_or_null
+  :  K_cover B_sequence S_LM ( clocking_event )? ( K_disable K_iff S_LM expression_or_dist S_RM )? sequence_expr S_RM statement_or_null
   ;
 
 restrict_property_statement
-  :  K_restrict K_property S_LM property_spec S_RM S_SC
+  :  K_restrict B_property S_LM property_spec S_RM S_SC
   ;
 
 property_instance 
@@ -1172,7 +1171,7 @@ assertion_item_declaration
   ;
 
 property_declaration 
-  :  K_property property_identifier ( S_LM ( property_port_list )? S_RM )? S_SC ( assertion_variable_declaration )* property_spec ( S_SC )? K_endproperty ( S_CO property_identifier )?
+  :  B_property property_identifier ( S_LM ( property_port_list )? S_RM )? S_SC ( assertion_variable_declaration )* property_spec ( S_SC )? B_endproperty ( S_CO property_identifier )?
   ;
 
 property_port_list 
@@ -1189,7 +1188,7 @@ property_lvar_port_direction
 
 property_formal_type 
   :  sequence_formal_type
-  |  K_property
+  |  B_property
   ;
 
 property_spec 
@@ -1201,13 +1200,13 @@ property_expr
   |  K_strong S_LM sequence_expr S_RM
   |  K_weak S_LM sequence_expr S_RM
   |  S_LM property_expr S_RM
-  |  K_not property_expr
-  |  <assoc=right> property_expr K_or property_expr
-  |  <assoc=right> property_expr K_and property_expr
-  |  <assoc=right> sequence_expr S_OR_MI_RB property_expr
-  |  <assoc=right> sequence_expr S_OR_EQ_RB property_expr
+  |  O_not property_expr
+  |  <assoc=right> property_expr O_or property_expr
+  |  <assoc=right> property_expr O_and property_expr
+  |  sequence_expr S_OR_MI_RB property_expr
+  |  sequence_expr S_OR_EQ_RB property_expr
   |  K_if ( expression_or_dist ) property_expr ( K_else property_expr )?
-  |  K_case ( expression_or_dist ) property_case_item ( property_case_item )* K_endcase
+  |  B_case ( expression_or_dist ) property_case_item ( property_case_item )* B_endcase
   |  sequence_expr S_SH_MI_SH property_expr
   |  sequence_expr S_SH_EQ_SH property_expr
   |  K_nexttime property_expr
@@ -1240,7 +1239,7 @@ property_case_item
   ;
 
 sequence_declaration 
-  :  K_sequence sequence_identifier ( S_LM ( sequence_port_list )? S_RM )? S_SC ( assertion_variable_declaration )* sequence_expr ( S_SC )? K_endsequence ( S_CO sequence_identifier )?
+  :  B_sequence sequence_identifier ( S_LM ( sequence_port_list )? S_RM )? S_SC ( assertion_variable_declaration )* sequence_expr ( S_SC )? B_endsequence ( S_CO sequence_identifier )?
   ;
 
 sequence_port_list 
@@ -1257,7 +1256,7 @@ sequence_lvar_port_direction
 
 sequence_formal_type 
   :  data_type_or_implicit
-  |  K_sequence
+  |  B_sequence
   |  K_untyped
   ;
 
@@ -1267,9 +1266,9 @@ sequence_expr
   |  expression_or_dist ( boolean_abbrev )?
   |  sequence_instance ( sequence_abbrev )?
   |  S_LM sequence_expr ( S_CM sequence_match_item )* S_RM ( sequence_abbrev )?
-  |  <assoc=right> sequence_expr K_and sequence_expr
+  |  <assoc=right> sequence_expr O_and sequence_expr
   |  <assoc=right> sequence_expr K_intersect sequence_expr
-  |  <assoc=right> sequence_expr K_or sequence_expr
+  |  <assoc=right> sequence_expr O_or sequence_expr
   |  K_first_match S_LM sequence_expr ( S_CM sequence_match_item )* S_RM
   |  expression_or_dist K_throughout sequence_expr
   |  <assoc=right> sequence_expr K_within sequence_expr
@@ -1352,7 +1351,7 @@ assertion_variable_declaration
 // A.2.11 Covergroup declarations
 
 covergroup_declaration 
-  :  K_covergroup covergroup_identifier ( S_LM ( tf_port_list )? S_RM )? ( coverage_event )? S_SC ( coverage_spec_or_option )* K_endgroup ( S_CO covergroup_identifier )?
+  :  B_covergroup covergroup_identifier ( S_LM ( tf_port_list )? S_RM )? ( coverage_event )? S_SC ( coverage_spec_or_option )* B_endgroup ( S_CO covergroup_identifier )?
   ;
 
 coverage_spec_or_option 
@@ -1372,14 +1371,14 @@ coverage_spec
 
 coverage_event 
   :  clocking_event
-  |  K_with K_function K_sample S_LM ( tf_port_list )? S_RM
+  |  K_with B_function K_sample S_LM ( tf_port_list )? S_RM
   |  S_AT_AT_LM block_event_expression S_RM
   ;
 
 block_event_expression 
-  :  block_event_expression K_or block_event_expression
-  |  K_begin hierarchical_btf_identifier
-  |  K_end hierarchical_btf_identifier
+  :  block_event_expression O_or block_event_expression
+  |  B_begin hierarchical_btf_identifier
+  |  B_end hierarchical_btf_identifier
   ;
 
 hierarchical_btf_identifier 
@@ -1404,7 +1403,7 @@ bins_or_options
   |   ( K_wildcard )? bins_keyword bin_identifier ( S_LK ( covergroup_expression )? S_RK )? S_EQ set_covergroup_expression ( K_iff S_LM expression S_RM )?
   |   ( K_wildcard )? bins_keyword bin_identifier ( S_LK S_RK )? S_EQ trans_list ( K_iff S_LM expression S_RM )?
   |  bins_keyword bin_identifier ( S_LK ( covergroup_expression )? S_RK )? S_EQ K_default ( K_iff S_LM expression S_RM )?
-  |  bins_keyword bin_identifier S_EQ K_default K_sequence ( K_iff S_LM expression S_RM )?
+  |  bins_keyword bin_identifier S_EQ K_default B_sequence ( K_iff S_LM expression S_RM )?
   ;
 
 bins_keyword
@@ -1473,7 +1472,7 @@ select_expression
   |  <assoc=right> select_expression S_AN_AN select_expression
   |  <assoc=right> select_expression S_OR_OR select_expression
   |  S_LM select_expression S_RM
-  |  select_expression K_with S_LM with_covergroup_expression S_RM ( K_matches integer_covergroup_expression )?
+  |  <assoc=right> select_expression K_with S_LM with_covergroup_expression S_RM ( K_matches integer_covergroup_expression )?
   |  cross_identifier
   |  cross_set_expression ( K_matches integer_covergroup_expression )?
   ;
@@ -1563,8 +1562,8 @@ gate_instantiation
   |  n_output_gatetype ( drive_strength )?  ( delay2 )?  n_output_gate_instance ( S_CM n_output_gate_instance )* S_SC
   |  pass_en_switchtype ( delay2 )?  pass_enable_switch_instance ( S_CM pass_enable_switch_instance )* S_SC
   |  pass_switchtype pass_switch_instance ( S_CM pass_switch_instance )* S_SC
-  |  K_pulldown ( pulldown_strength )?  pull_gate_instance ( S_CM pull_gate_instance )* S_SC
-  |  K_pullup ( pullup_strength )?  pull_gate_instance ( S_CM pull_gate_instance )* S_SC
+  |  O_pulldown ( pulldown_strength )?  pull_gate_instance ( S_CM pull_gate_instance )* S_SC
+  |  O_pullup ( pullup_strength )?  pull_gate_instance ( S_CM pull_gate_instance )* S_SC
   ;
 
 cmos_switch_instance
@@ -1642,31 +1641,31 @@ pcontrol_terminal
 // A.3.4 Primitive gate and switch types
 
 cmos_switchtype
-  :  K_cmos | K_rcmos
+  :  O_cmos | O_rcmos
   ;
 
 enable_gatetype
-  :  K_bufif0 | K_bufif1 | K_notif0 | K_notif1
+  :  O_bufif0 | O_bufif1 | O_notif0 | O_notif1
   ;
 
 mos_switchtype
-  :  K_nmos | K_pmos | K_rnmos | K_rpmos
+  :  O_nmos | O_pmos | O_rnmos | O_rpmos
   ;
 
 n_input_gatetype
-  :  K_and | K_nand | K_or | K_nor | K_xor | K_xnor
+  :  O_and | O_nand | O_or | O_nor | O_xor | O_xnor
   ;
 
 n_output_gatetype
-  :  K_buf | K_not
+  :  O_buf | O_not
   ;
 
 pass_en_switchtype
-  :  K_tranif0 | K_tranif1 | K_rtranif1 | K_rtranif0
+  :  O_tranif0 | O_tranif1 | O_rtranif1 | O_rtranif0
   ;
 
 pass_switchtype
-  :  K_tran | K_rtran
+  :  O_tran | O_rtran
   ;
 
 // A.4 Instantiations
@@ -1751,7 +1750,7 @@ named_checker_port_connection
 // A.4.2 Generated instantiation
 
 generate_region 
-  :  K_generate ( generate_item )* K_endgenerate
+  :  B_generate ( generate_item )* B_endgenerate
   ;
 
 loop_generate_construct 
@@ -1778,7 +1777,7 @@ if_generate_construct
   ;
 
 case_generate_construct 
-  :  K_case S_LM constant_expression S_RM case_generate_item ( case_generate_item )* K_endcase
+  :  B_case S_LM constant_expression S_RM case_generate_item ( case_generate_item )* B_endcase
   ;
 
 case_generate_item 
@@ -1788,7 +1787,7 @@ case_generate_item
 
 generate_block 
   :  generate_item
-  |   ( generate_block_identifier S_CO )? K_begin ( S_CO generate_block_identifier )? ( generate_item )* K_end ( S_CO generate_block_identifier )?
+  |   ( generate_block_identifier S_CO )? B_begin ( S_CO generate_block_identifier )? ( generate_item )* B_end ( S_CO generate_block_identifier )?
   ;
 
 generate_item
@@ -1796,24 +1795,24 @@ generate_item
   |  interface_or_generate_item
   |  checker_or_generate_item
   ;
-// fixme
+
 // A.5 UDP declaration and instantiation
 // A.5.1 UDP declaration
-/*
+
 udp_nonansi_declaration 
-  :  ( attribute_instance )* K_primitive udp_identifier S_LM udp_port_list S_RM S_SC
+  :  ( attribute_instance )* B_primitive udp_identifier S_LM udp_port_list S_RM S_SC
   ;
 
 udp_ansi_declaration 
-  :  ( attribute_instance )* K_primitive udp_identifier S_LM udp_declaration_port_list S_RM S_SC
+  :  ( attribute_instance )* B_primitive udp_identifier S_LM udp_declaration_port_list S_RM S_SC
   ;
 
 udp_declaration 
-  :  udp_nonansi_declaration udp_port_declaration ( udp_port_declaration )* udp_body K_endprimitive ( S_CO udp_identifier )?
-  |  udp_ansi_declaration udp_body K_endprimitive ( S_CO udp_identifier )?
+  :  udp_nonansi_declaration udp_port_declaration ( udp_port_declaration )* udp_body B_endprimitive ( S_CO udp_identifier )?
+  |  udp_ansi_declaration udp_body B_endprimitive ( S_CO udp_identifier )?
   |  K_extern udp_nonansi_declaration
   |  K_extern udp_ansi_declaration
-  |  ( attribute_instance )* K_primitive udp_identifier S_LM S_DT_AS S_RM S_SC ( udp_port_declaration )* udp_body K_endprimitive ( S_CO udp_identifier )?
+  |  ( attribute_instance )* B_primitive udp_identifier S_LM S_DT_AS S_RM S_SC ( udp_port_declaration )* udp_body B_endprimitive ( S_CO udp_identifier )?
   ;
 
 // A.5.2 UDP ports
@@ -1833,16 +1832,16 @@ udp_port_declaration
   ;
 
 udp_output_declaration 
-  :  ( attribute_instance )* K_output port_identifier
-  |  ( attribute_instance )* K_output K_reg port_identifier ( S_EQ constant_expression )?
+  :  ( attribute_instance )* T_output port_identifier
+  |  ( attribute_instance )* T_output T_reg port_identifier ( S_EQ constant_expression )?
   ;
 
 udp_input_declaration
-  :  ( attribute_instance )* K_input list_of_udp_port_identifiers
+  :  ( attribute_instance )* T_input list_of_udp_port_identifiers
   ;
 
 udp_reg_declaration
-  :  ( attribute_instance )* K_reg variable_identifier
+  :  ( attribute_instance )* T_reg variable_identifier
   ;
 
 // A.5.3 UDP body
@@ -1852,27 +1851,25 @@ udp_body
   ;
 
 combinational_body
-  :  K_table combinational_entry ( combinational_entry )* K_endtable
+  :  B_table combinational_entry ( combinational_entry )* B_endtable
   ;
 
+//[Mod]
 combinational_entry
-  :  level_input_list S_CO output_symbol S_SC
+  :  level_input_list S_CO_EDGE S_Level S_SC_EDGE
   ;
 
 sequential_body
-  :   ( udp_initial_statement )? K_table sequential_entry ( sequential_entry )* K_endtable
+  :   ( udp_initial_statement )? B_table sequential_entry ( sequential_entry )* B_endtable
   ;
 
+//[Mod]
 udp_initial_statement
-  :  K_initial output_port_identifier S_EQ Init_val S_SC
-  ;
-
-fragment Init_val
-  : '1\'b0' | '1\'b1' | '1\'bx' | '1\'bX' | '1\'B0' | '1\'B1' | '1\'Bx' | '1\'BX' | '1' | '0'
+  :  K_initial output_port_identifier S_EQ scalar_number S_SC
   ;
 
 sequential_entry
-  :  seq_input_list S_CO current_state S_CO next_state S_SC
+  :  seq_input_list S_CO_EDGE current_state S_CO_EDGE next_state S_SC_EDGE
   ;
 
 seq_input_list
@@ -1880,35 +1877,24 @@ seq_input_list
   ;
 
 level_input_list
-  :  level_symbol ( level_symbol )*
+  :  S_Level ( S_Level )*
   ;
 
 edge_input_list
-  :  ( level_symbol )* edge_indicator ( level_symbol )*
+  :  ( S_Level )* edge_indicator ( S_Level )*
   ;
 
 edge_indicator
-  :  S_LM level_symbol level_symbol S_RM | edge_symbol
+  :  S_LM_EDGE S_Level S_Level S_RM_EDGE | S_Edge
   ;
 
 current_state
-  :  level_symbol
+  :  S_Level
   ;
 
+//[Mod]
 next_state
-  :  output_symbol | S_MI
-  ;
-
-fragment Output_symbol
-  :  '0' | '1' | 'x' |'X'
-  ;
-
-fragment level_symbol
-  :  '0' | '1' | 'x' | 'X' | S_QU | 'b' | 'B'
-  ;
-
-fragment edge_symbol
-  :  'r' | 'R' | 'f' | 'F' | 'p' | 'P' | 'n' | 'N' | S_AS
+  :  S_Level | S_MI_EDGE
   ;
 
 // A.5.4 UDP instantiation
@@ -1920,7 +1906,7 @@ udp_instantiation
 udp_instance
   :   ( name_of_instance )? S_LM output_terminal S_CM input_terminal ( S_CM input_terminal )* S_RM
   ;
-*/
+
 // A.6 Behavioral statements
 // A.6.1 Continuous assignment and net alias statements
 
@@ -2003,7 +1989,7 @@ action_block
   ;
 
 seq_block 
-  :  K_begin ( S_CO block_identifier )? ( block_item_declaration )* ( statement_or_null )* K_end ( S_CO block_identifier )?
+  :  B_begin ( S_CO block_identifier )? ( block_item_declaration )* ( statement_or_null )* B_end ( S_CO block_identifier )?
   ;
 
 par_block 
@@ -2089,7 +2075,7 @@ event_control
 event_expression
   :   ( edge_identifier )? expression ( K_iff expression )?
   |  sequence_instance ( K_iff expression )?
-  |  <assoc=right> event_expression K_or event_expression
+  |  <assoc=right> event_expression O_or event_expression
   |  <assoc=right> event_expression S_CM event_expression
   |  S_LM event_expression S_RM
   ;
@@ -2134,28 +2120,29 @@ unique_priority
   ;
 
 cond_predicate 
-  :  expression_or_cond_pattern ( S_AN_AN_AN expression_or_cond_pattern )*
+  :  expression ( K_matches pattern )? ( S_AN_AN_AN expression ( K_matches pattern )? )*
   ;
 
-expression_or_cond_pattern 
-  :  expression
-  |  cond_pattern
-  ;
-
-cond_pattern
-  :  expression K_matches pattern
-  ;
+//[mod]
+//expression_or_cond_pattern 
+//  :  expression
+//  |  cond_pattern
+//  ;
+//
+//cond_pattern
+//  :  expression K_matches pattern
+//  ;
 
 // A.6.7 Case statements
 
 case_statement 
-  :   ( unique_priority )? case_keyword S_LM case_expression S_RM case_item ( case_item )* K_endcase
-  |   ( unique_priority )? case_keyword S_LM case_expression S_RM K_matches case_pattern_item ( case_pattern_item )* K_endcase
-  |   ( unique_priority )? K_case S_LM case_expression S_RM K_inside case_inside_item ( case_inside_item )* K_endcase
+  :   ( unique_priority )? case_keyword S_LM case_expression S_RM case_item ( case_item )* B_endcase
+  |   ( unique_priority )? case_keyword S_LM case_expression S_RM K_matches case_pattern_item ( case_pattern_item )* B_endcase
+  |   ( unique_priority )? B_case S_LM case_expression S_RM K_inside case_inside_item ( case_inside_item )* B_endcase
   ;
 
 case_keyword
-  :  K_case | K_casez | K_casex
+  :  B_case | B_casez | B_casex
   ;
 
 case_expression
@@ -2182,7 +2169,7 @@ case_item_expression
   ;
 
 randcase_statement 
-  :  K_randcase randcase_item ( randcase_item )* K_endcase
+  :  K_randcase randcase_item ( randcase_item )* B_endcase
   ;
 
 randcase_item
@@ -2355,8 +2342,8 @@ deferred_immediate_cover_statement
 // A.6.11 Clocking block
 
 clocking_declaration
-  :   ( K_default )? K_clocking ( clocking_identifier )? clocking_event S_SC ( clocking_item )* K_endclocking ( S_CO clocking_identifier )?
-  |  K_global K_clocking ( clocking_identifier )? clocking_event S_SC K_endclocking ( S_CO clocking_identifier )?
+  :   ( K_default )? B_clocking ( clocking_identifier )? clocking_event S_SC ( clocking_item )* B_endclocking ( S_CO clocking_identifier )?
+  |  K_global B_clocking ( clocking_identifier )? clocking_event S_SC B_endclocking ( S_CO clocking_identifier )?
   ;
 
 clocking_event 
@@ -2417,7 +2404,7 @@ clockvar_expression
 // A.6.12 Randsequence
 
 randsequence_statement
-  :  K_randsequence S_LM ( production_identifier )? S_RM production ( production )* K_endsequence
+  :  K_randsequence S_LM ( production_identifier )? S_RM production ( production )* B_endsequence
   ;
 
 production
@@ -2464,7 +2451,7 @@ rs_repeat
   ;
 
 rs_case
-  :  K_case S_LM case_expression S_RM rs_case_item ( rs_case_item )* K_endcase
+  :  B_case S_LM case_expression S_RM rs_case_item ( rs_case_item )* B_endcase
   ;
 
 rs_case_item 
@@ -2476,7 +2463,7 @@ rs_case_item
 // A.7.1 Specify block declaration
 
 specify_block
-  :  K_specify ( specify_item )* K_endspecify
+  :  B_specify ( specify_item )* B_endspecify
   ;
 
 specify_item 
@@ -2484,7 +2471,7 @@ specify_item
   |  pulsestyle_declaration
   |  showcancelled_declaration
   |  path_declaration
-//|  system_timing_check	// fixme
+  |  system_timing_check
   ;
 
 pulsestyle_declaration 
@@ -2657,10 +2644,10 @@ state_dependent_path_declaration
 polarity_operator
   :  S_PL | S_MI
   ;
-// fixme
+
 // A.7.5 System timing checks
 // A.7.5.1 System timing check commands
-/*
+
 system_timing_check 
   :  dol_setup_timing_check
   |  dol_hold_timing_check
@@ -2677,51 +2664,51 @@ system_timing_check
   ;
 
 dol_setup_timing_check 
-  :  K_DL_setup S_LM data_event S_CM reference_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_setup S_LM data_event S_CM reference_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_hold_timing_check 
-  :  K_DL_hold S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_hold S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_setuphold_timing_check 
-  :  K_DL_setuphold S_LM reference_event S_CM data_event S_CM timing_check_limit S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( timestamp_condition )? ( S_CM ( timecheck_condition )? ( S_CM ( delayed_reference )? ( S_CM ( delayed_data )? )? )? )? )? )? S_RM S_SC
+  :  D_setuphold S_LM reference_event S_CM data_event S_CM timing_check_limit S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( timestamp_condition )? ( S_CM ( timecheck_condition )? ( S_CM ( delayed_reference )? ( S_CM ( delayed_data )? )? )? )? )? )? S_RM S_SC
   ;
 
 dol_recovery_timing_check 
-  :  K_DL_recovery S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_recovery S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_removal_timing_check 
-  :  K_DL_removal S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_removal S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_recrem_timing_check 
-  :  K_DL_recrem S_LM reference_event S_CM data_event S_CM timing_check_limit S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( timestamp_condition )? ( S_CM ( timecheck_condition )? ( S_CM ( delayed_reference )? ( S_CM ( delayed_data )? )? )? )? )? )? S_RM S_SC
+  :  D_recrem S_LM reference_event S_CM data_event S_CM timing_check_limit S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( timestamp_condition )? ( S_CM ( timecheck_condition )? ( S_CM ( delayed_reference )? ( S_CM ( delayed_data )? )? )? )? )? )? S_RM S_SC
   ;
 
 dol_skew_timing_check 
-  :  K_DL_skew S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_skew S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_timeskew_timing_check 
-  :  K_DL_timeskew S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( event_based_flag )? ( S_CM ( remain_active_flag )? )? )? )? S_RM S_SC
+  :  D_timeskew S_LM reference_event S_CM data_event S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( event_based_flag )? ( S_CM ( remain_active_flag )? )? )? )? S_RM S_SC
   ;
 
 dol_fullskew_timing_check 
-  :  K_DL_fullskew S_LM reference_event S_CM data_event S_CM timing_check_limit S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( event_based_flag )? ( S_CM ( remain_active_flag )? )? )? )? S_RM S_SC
+  :  D_fullskew S_LM reference_event S_CM data_event S_CM timing_check_limit S_CM timing_check_limit ( S_CM ( notifier )? ( S_CM ( event_based_flag )? ( S_CM ( remain_active_flag )? )? )? )? S_RM S_SC
   ;
 
 dol_period_timing_check 
-  :  K_DL_period S_LM controlled_reference_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_period S_LM controlled_reference_event S_CM timing_check_limit ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_width_timing_check 
-  :  K_DL_width S_LM controlled_reference_event S_CM timing_check_limit S_CM threshold ( S_CM ( notifier )? )? S_RM S_SC
+  :  D_width S_LM controlled_reference_event S_CM timing_check_limit S_CM threshold ( S_CM ( notifier )? )? S_RM S_SC
   ;
 
 dol_nochange_timing_check 
-  :  K_DL_nochange S_LM reference_event S_CM data_event S_CM start_edge_offset S_CM end_edge_offset ( S_CM ( notifier )? )? S_RM
+  :  D_nochange S_LM reference_event S_CM data_event S_CM start_edge_offset S_CM end_edge_offset ( S_CM ( notifier )? )? S_RM
   ;
 
 // A.7.5.2 System timing check command arguments
@@ -2795,9 +2782,9 @@ controlled_timing_check_event
   ;
 
 timing_check_event_control 
-  :  K_posedge
-  |  K_negedge
-  |  K_edge
+  :  T_posedge
+  |  T_negedge
+  |  T_edge
   |  edge_control_specifier
   ;
 
@@ -2806,24 +2793,13 @@ specify_terminal_descriptor
   |  specify_output_terminal_descriptor
   ;
 
+//[Mod]
 edge_control_specifier
-  :  K_edge S_LK edge_descriptor ( S_CM edge_descriptor )* S_RK
+  :  T_edge edge_descriptor ( S_CM_EDGE edge_descriptor )* S_RK_EDGE
   ;
 
 edge_descriptor
-  :  Zeroone_or_onezero | Z_or_x Zero_or_one | Zero_or_one Z_or_x
-  ;
-
-fragment Zeroone_or_onezero
-  : '01' | '10'
-  ;
-
-fragment Zero_or_one
-  :  '0' | '1'
-  ;
-
-fragment Z_or_x
-  :  'x' | 'X' | 'z' | 'Z'
+  :  S_ZO_OZ | S_Z_X S_Z_O | S_Z_O S_Z_X
   ;
 
 timing_check_condition 
@@ -2834,16 +2810,12 @@ timing_check_condition
 scalar_timing_check_condition 
   :  expression
   |  S_NE expression
-  |  expression S_EQ_EQ scalar_constant
-  |  expression S_EQ_EQ_EQ scalar_constant
-  |  expression S_EX_EQ scalar_constant
-  |  expression S_EX_EQ_EQ scalar_constant
+  |  expression S_EQ_EQ scalar_number
+  |  expression S_EQ_EQ_EQ scalar_number
+  |  expression S_EX_EQ scalar_number
+  |  expression S_EX_EQ_EQ scalar_number
   ;
 
-fragment Scalar_constant
-  :  '1\'b0' | '1\'b1' | '1\'B0' | '1\'B1' | '\'b0' | '\'b1' | '\'B0' | '\'B1' | K_1 | K_0
-  ;
-*/
 // A.8 Expressions
 // A.8.1 Concatenations
 
@@ -2908,6 +2880,11 @@ constant_function_call
   :  function_subroutine_call
   ;
 
+//[mod]
+constant_function_call_t
+  :  function_subroutine_call_t
+  ;
+
 tf_call
   :  ps_or_hierarchical_tf_identifier ( attribute_instance )* ( S_LM list_of_arguments S_RM )?
   ;
@@ -2922,11 +2899,18 @@ subroutine_call
   :  tf_call
   |  system_tf_call
   |  method_call
-  |   ( K_std_CO_CO )? randomize_call
+  |  ( K_std_CO_CO )? randomize_call
   ;
 
 function_subroutine_call
   :  subroutine_call
+  ;
+
+//[mod]
+function_subroutine_call_t
+  :  tf_call
+  |  system_tf_call
+  |  ( K_std_CO_CO )? randomize_call
   ;
 
 list_of_arguments 
@@ -2957,11 +2941,12 @@ randomize_call
   ;
 
 method_call_root
-  :  /*primary |*/ implicit_class_handle	// fixme
+  :  primary
+  |  implicit_class_handle
   ;
 
 array_method_name 
-  :  method_identifier | K_unique | K_and | K_or | K_xor
+  :  method_identifier | K_unique | O_and | O_or | O_xor
   ;
 
 // A.8.3 Expressions
@@ -2970,18 +2955,18 @@ inc_or_dec_expression
   :  inc_or_dec_operator ( attribute_instance )* variable_lvalue
   |  variable_lvalue ( attribute_instance )* inc_or_dec_operator
   ;
-// merge to expression
-/*
-conditional_expression
-  :  cond_predicate S_QU ( attribute_instance )* expression S_CO expression
-  ;
-*/
+  
+//[mod]
+//conditional_expression
+//  :  cond_predicate S_QU ( attribute_instance )* expression S_CO expression
+//  ;
+
 constant_expression
-:  constant_primary
-|  unary_operator ( attribute_instance )* constant_primary
-|  <assoc=right> constant_expression binary_operator ( attribute_instance )* constant_expression
-|  <assoc=right> constant_expression S_QU ( attribute_instance )* constant_expression S_CO constant_expression
-;
+  :  constant_primary
+  |  unary_operator ( attribute_instance )* constant_primary
+  |  <assoc=right> constant_expression binary_operator ( attribute_instance )* constant_expression
+  |  <assoc=right> constant_expression S_QU ( attribute_instance )* constant_expression S_CO constant_expression
+  ;
 
 constant_mintypmax_expression 
   :  constant_expression
@@ -3015,29 +3000,29 @@ constant_indexed_range
   |  constant_expression S_MI_CO constant_expression
   ;
 
+//[mod]
 expression
   :  primary
   |  unary_operator ( attribute_instance )* primary
   |  inc_or_dec_expression
   |  S_LM operator_assignment S_RM
   |  <assoc=right> expression binary_operator ( attribute_instance )* expression
-  |  <assoc=right> expression (K_matches pattern)? ( S_AN_AN_AN expression (K_matches pattern)? )* S_QU ( attribute_instance )* expression S_CO expression
-//|  <assoc=right> cond_predicate S_QU ( attribute_instance )* expression S_CO expression
 //|  conditional_expression
-  |  <assoc=right> expression K_inside S_LN open_range_list S_RN
+  |  <assoc=right> expression ( K_matches pattern )? ( S_AN_AN_AN expression ( K_matches pattern )? )* S_QU ( attribute_instance )* expression S_CO expression
 //|  inside_expression
+  |  <assoc=right> expression K_inside S_LN open_range_list S_RN
   |  tagged_union_expression
   ;
 
 tagged_union_expression 
   :  T_tagged member_identifier ( expression )?
   ;
-// merge to expression
-/*
-inside_expression
-  :  expression K_inside S_LN open_range_list S_RN
-  ;
-*/
+  
+//[mod]
+//inside_expression
+//  :  expression K_inside S_LN open_range_list S_RN
+//  ;
+
 value_range 
   :  expression
   |  S_LK expression S_CO expression S_RK
@@ -3047,18 +3032,19 @@ mintypmax_expression
   :  expression
   |  expression S_CO expression S_CO expression
   ;
-// merge to module_path_expression
-/*
-module_path_conditional_expression
-  :  <assoc=right> module_path_expression S_QU ( attribute_instance )* module_path_expression S_CO module_path_expression
-  ;
-*/
+
+//[mod]
+//module_path_conditional_expression
+//  :  <assoc=right> module_path_expression S_QU ( attribute_instance )* module_path_expression S_CO module_path_expression
+//  ;
+
+//[mod]
 module_path_expression 
   :  module_path_primary
   |  unary_module_path_operator ( attribute_instance )* module_path_primary
   |  <assoc=right> module_path_expression binary_module_path_operator ( attribute_instance )* module_path_expression
-  |  <assoc=right> module_path_expression S_QU ( attribute_instance )* module_path_expression S_CO module_path_expression
 //|  module_path_conditional_expression
+  |  <assoc=right> module_path_expression S_QU ( attribute_instance )* module_path_expression S_CO module_path_expression
   ;
 
 module_path_mintypmax_expression 
@@ -3080,7 +3066,8 @@ genvar_expression
   ;
 
 // A.8.4 Primaries
-// fixme
+
+//[mod]
 constant_primary 
   :  primary_literal
   |  ps_parameter_identifier constant_select
@@ -3090,10 +3077,13 @@ constant_primary
   |   ( package_scope | class_scope )? enum_identifier
   |  constant_concatenation ( S_LK constant_range_expression S_RK )?
   |  constant_multiple_concatenation ( S_LK constant_range_expression S_RK )?
-  |  constant_function_call
+//|  constant_function_call
+  |  constant_function_call_t
   |  constant_let_expression
   |  S_LM constant_mintypmax_expression S_RM
 //|  constant_cast
+  |  <assoc=right> constant_primary S_SQ S_LM expression S_RM
+  |  casting_type_t S_SQ S_LM expression S_RM
   |  constant_assignment_pattern_expression
   |  type_reference
   |  T_null
@@ -3107,17 +3097,20 @@ module_path_primary
   |  function_subroutine_call
   |  S_LM module_path_mintypmax_expression S_RM
   ;
-// fixme
+
+//[mod]
 primary 
   :  primary_literal
   |   ( class_qualifier | package_scope )? hierarchical_identifier select
   |  empty_unpacked_array_concatenation
   |  concatenation ( S_LK range_expression S_RK )?
   |  multiple_concatenation ( S_LK range_expression S_RK )?
-  |  function_subroutine_call
+//|  function_subroutine_call
+  |  function_subroutine_call_t
+  |  <assoc=right> primary S_DT method_call_body
   |  let_expression
   |  S_LM mintypmax_expression S_RM
-//|  cast
+  |  cast
   |  assignment_pattern_expression
   |  streaming_concatenation
   |  sequence_method_call
@@ -3136,7 +3129,7 @@ range_expression
   ;
 
 primary_literal
-  :  number | Time_literal | Unbased_unsized_literal | String_literal
+  :  number | L_Time | N_Unbased_unsized | L_String
   ;
 
 implicit_class_handle
@@ -3163,9 +3156,10 @@ constant_select
   :   ( ( S_DT member_identifier constant_bit_select )* S_DT member_identifier )? constant_bit_select ( S_LK constant_part_select_range S_RK )?
   ;
 
-constant_cast 
-  :  casting_type S_SQ S_LM constant_expression S_RM
-  ;
+//[mod]
+//constant_cast 
+//  :  casting_type S_SQ S_LM constant_expression S_RM
+//  ;
 
 constant_let_expression
   :  let_expression
@@ -3232,32 +3226,38 @@ integral_number
   | decimal_number
   ;
 
+//[Mod]
+scalar_number
+  : binary_number
+  | N_Unsigned
+  ;
+
 decimal_number 
-  :  ( size )? Decimal_base_number
-  | Unsigned_number
+  :  ( size )? N_Dec
+  | N_Unsigned
   ;
 
 binary_number
-  :  ( size )? Binary_base_number
+  :  ( size )? N_Bin
   ;
 
 
 octal_number
-  :  ( size )? Octal_base_number
+  :  ( size )? N_Oct
   ;
 
 
 hex_number
-  :  ( size )? Hex_base_number
+  :  ( size )? N_Hex
   ;
 
 size
-  :  Unsigned_number
+  :  N_Unsigned
   ;
 
 real_number
-  :  Fixed_point_number
-  |  Exp_number
+  :  N_Fix
+  |  N_Exp
   ;
 
 // A.8.8 Strings
@@ -3294,7 +3294,7 @@ bin_identifier
   ;
 
 c_identifier
-  :   Simple_identifier
+  :   I_Simple
   ;
 
 cell_identifier
@@ -3386,7 +3386,7 @@ hierarchical_event_identifier
   ;
 
 hierarchical_identifier
-  :   ( K_DL_root S_DT )? ( identifier constant_bit_select S_DT )* identifier
+  :   ( D_root S_DT )? ( identifier constant_bit_select S_DT )* identifier
   ;
 
 hierarchical_net_identifier
@@ -3418,8 +3418,8 @@ hierarchical_variable_identifier
   ;
 
 identifier 
-  :  Simple_identifier
-  |  Escaped_identifier
+  :  I_Simple
+  |  I_Escaped
   ;
 
 index_variable_identifier
@@ -3484,7 +3484,7 @@ package_identifier
 
 package_scope 
   :  package_identifier S_CO_CO
-  |  K_DL_unit S_CO_CO
+  |  D_unit S_CO_CO
   ;
 
 parameter_identifier
@@ -3568,7 +3568,7 @@ specparam_identifier
   ;
 
 system_tf_identifier
-  :  System_tf_identifier
+  :  I_System_tf
   ;
 
 task_identifier
