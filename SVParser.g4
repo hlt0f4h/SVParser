@@ -2,7 +2,7 @@
  * IEEE 1800-2017 SystemVerilog
  * Parser Rule
  *
- * [#01] 2022-01-22
+ * [#02] 2022-04-19
  *
  * https://github.com/hlt0f4h/SVParser
  */
@@ -1371,7 +1371,9 @@ coverage_spec
 
 coverage_event 
   :  clocking_event
-  |  K_with B_function K_sample S_LM ( tf_port_list )? S_RM
+//[Mod]
+//|  K_with B_function K_sample S_LM ( tf_port_list )? S_RM
+  |  K_with B_function function_identifier S_LM ( tf_port_list )? S_RM
   |  S_AT_AT_LM block_event_expression S_RM
   ;
 
@@ -3598,3 +3600,4 @@ udp_identifier
 variable_identifier
   :  identifier
   ;
+ 
