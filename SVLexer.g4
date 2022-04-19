@@ -2,7 +2,7 @@
  * IEEE 1800-2017 SystemVerilog
  * Lexer Rule
  *
- * [#01] 2022-01-22
+ * [#02] 2022-04-19
  *
  * https://github.com/hlt0f4h/SVParser
  */
@@ -244,7 +244,7 @@ K_s_eventually       : 's_eventually'       ;
 K_s_nexttime         : 's_nexttime'         ;
 K_s_until            : 's_until'            ;
 K_s_until_with       : 's_until_with'       ;
-K_sample             : 'sample'             ;
+//K_sample             : 'sample'             ;
 K_showcancelled      : 'showcancelled'      ;
 K_soft               : 'soft'               ;
 K_solve              : 'solve'              ;
@@ -374,8 +374,125 @@ O_tranif1            : 'tranif1'            ;
 O_xnor               : 'xnor'               ;
 O_xor                : 'xor'                ;
 
+// Number
 N_Unbased_unsized
-  : '\'0' | '\'1' | '\'z_or_x'
+  : S_SQ ( '0' | '1' | X_digit | Z_digit_mod )
+  ;
+
+N_Dec
+  : Decimal_base (' ')? N_Unsigned
+  | Decimal_base (' ')? X_digit ( S_UB )*
+  | Decimal_base (' ')? Z_digit ( S_UB )*
+  ;
+
+N_Bin
+  : Binary_base (' ')? Binary_value
+  ;
+
+N_Oct
+  : Octal_base (' ')? Octal_value
+  ;
+
+N_Hex
+  : Hex_base (' ')? Hex_value
+  ;
+
+N_Exp
+  : N_Unsigned ( S_DT N_Unsigned )? Exp ( Sign )? N_Unsigned
+  ;
+
+N_Fix
+  : N_Unsigned S_DT N_Unsigned
+  ;
+
+N_Unsigned
+  :  Decimal_digit ( S_UB | Decimal_digit )*
+  ;
+  
+fragment Sign
+  :  S_PL | S_MI
+  ;
+
+fragment Exp
+  :  'e' | 'E'
+  ;
+
+fragment Binary_value
+  :  Binary_xz_digit ( S_UB | Binary_xz_digit )*
+  ;
+
+fragment Octal_value
+  :  Octal_xz_digit ( S_UB | Octal_xz_digit )*
+  ;
+
+fragment Hex_value
+  :  Hex_xz_digit ( S_UB | Hex_xz_digit )*
+  ;
+
+fragment Decimal_base
+  :  S_SQ ( 's' | 'S' )? 'd'
+  |  S_SQ ( 's' | 'S' )? 'D'
+  ;
+
+fragment Binary_base
+  :  S_SQ ( 's' | 'S' )? 'b'
+  |  S_SQ ( 's' | 'S' )? 'B'
+  ;
+
+fragment Octal_base
+  :  S_SQ ( 's' | 'S' )? 'o'
+  |  S_SQ ( 's' | 'S' )? 'O'
+  ;
+
+fragment Hex_base
+  :  S_SQ ( 's' | 'S' )? 'h'
+  |  S_SQ ( 's' | 'S' )? 'H'
+  ;
+
+fragment Decimal_digit
+  :  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  ;
+
+fragment Binary_xz_digit
+  :  X_digit | Z_digit | '0' | '1'
+  ;
+
+fragment Octal_xz_digit
+  :  X_digit | Z_digit | Octal_digit
+  ;
+
+fragment Octal_digit
+  :  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7'
+  ;
+
+fragment Hex_xz_digit
+  :  X_digit | Z_digit | Hex_digit
+  ;
+
+fragment Hex_digit
+  :  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+  ;
+
+fragment X_digit
+  :  'x' | 'X'
+  ;
+
+fragment Z_digit
+  :  'z' | 'Z' | S_QU
+  ;
+ 
+fragment Z_digit_mod
+  :  'z' | 'Z'
+  ;
+
+// Time literal
+L_Time
+  :  N_Unsigned Time_unit
+  |  N_Fix Time_unit
+  ;
+
+fragment Time_unit
+  :  's' | 'ms' | 'us' | 'ns' | 'ps' | 'fs'
   ;
 
 // Symbols
@@ -475,127 +592,6 @@ S_MI_RB_RB           : '->>'                ;
 S_RB_RB_EQ           : '>>='                ;
 S_RB_RB_RB           : '>>>'                ;
 S_RB_RB_RB_EQ        : '>>>='               ;
-
-// Number
-N_Dec
-  : Decimal_base N_Unsigned
-  | Decimal_base X_digit ( S_UB )*
-  | Decimal_base Z_digit ( S_UB )*
-  ;
-
-N_Bin
-  : Binary_base Binary_value
-  ;
-
-N_Oct
-  : Octal_base Octal_value
-  ;
-
-N_Hex
-  : Hex_base Hex_value
-  ;
-
-N_Exp
-  : N_Unsigned ( S_DT N_Unsigned )? Exp ( Sign )? N_Unsigned
-  ;
-
-N_Fix
-  : N_Unsigned S_DT N_Unsigned
-  ;
-
-N_Unsigned
-  :  Decimal_digit ( S_UB | Decimal_digit )*
-  ;
-  
-fragment Sign
-  :  S_PL | S_MI
-  ;
-
-fragment Exp
-  :  'e' | 'E'
-  ;
-
-fragment Binary_value
-  :  Binary_xz_digit ( S_UB | Binary_xz_digit )*
-  ;
-
-fragment Octal_value
-  :  Octal_xz_digit ( S_UB | Octal_xz_digit )*
-  ;
-
-fragment Hex_value
-  :  Hex_xz_digit ( S_UB | Hex_xz_digit )*
-  ;
-
-fragment Decimal_base
-  :  S_SQ ( 's' | 'S' )? 'd'
-  |  S_SQ ( 's' | 'S' )? 'D'
-  ;
-
-fragment Binary_base
-  :  S_SQ ( 's' | 'S' )? 'b'
-  |  S_SQ ( 's' | 'S' )? 'B'
-  ;
-
-fragment Octal_base
-  :  S_SQ ( 's' | 'S' )? 'o'
-  |  S_SQ ( 's' | 'S' )? 'O'
-  ;
-
-fragment Hex_base
-  :  S_SQ ( 's' | 'S' )? 'h'
-  |  S_SQ ( 's' | 'S' )? 'H'
-  ;
-
-fragment Decimal_digit
-  :  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-  ;
-
-fragment Binary_xz_digit
-  :  X_digit | Z_digit | '0' | '1'
-  ;
-
-fragment Octal_xz_digit
-  :  X_digit | Z_digit | Octal_digit
-  ;
-
-fragment Octal_digit
-  :  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7'
-  ;
-
-fragment Hex_xz_digit
-  :  X_digit | Z_digit | Hex_digit
-  ;
-
-fragment Hex_digit
-  :  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
-  ;
-
-fragment X_digit
-  :  'x' | 'X'
-  ;
-
-fragment Z_digit
-  :  'z' | 'Z' | S_QU
-  ;
- 
-fragment Z
-  :  'z' | 'Z'
-  ;
-
-fragment X
-  :  'x' | 'X'
-  ;
-
-// Time literal
-L_Time
-  :  N_Unsigned Time_unit
-  |  N_Fix Time_unit
-  ;
-
-fragment Time_unit
-  :  's' | 'ms' | 'us' | 'ns' | 'ps' | 'fs'
-  ;
 
 // Identifier
 I_Escaped
