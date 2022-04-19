@@ -12,7 +12,7 @@ Known Issues:
 	
   - SVParser
     - There are still many syntaxes that cannot be parsed correctly.
-      The results of running the following tests in a my local environment were 85% (898/1046).
+    - The results of running the following tests in a my local environment were 85% (898/1046).
       https://github.com/chipsalliance/sv-tests/tree/master/tests
 
 History:
@@ -24,5 +24,5 @@ History:
     - Renamed lexical terms for ease of color coding in the editor.
   - [#02] 2022-04-19 (85%)
     - Fix handling of spaces between radix and numbers.
-    - Fix erroneous definition of unbased_unsized_literal.
+    - Fix wrong definition of unbased_unsized_literal.
     - Fix handling of identifiers or reserved words 'sample'.
